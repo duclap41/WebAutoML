@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5c4fcb2-240c-43a7-97b7-2d0fc9b89707" name="Changes" comment="Initialize WebSite Auto Machine Learning project">
-      <change afterPath="$PROJECT_DIR$/Database/MSSQLServer.py" afterDir="false" />
-    </list>
+    <list default="true" id="f5c4fcb2-240c-43a7-97b7-2d0fc9b89707" name="Changes" comment="Add MSSQLServer.py: Class connect MySQL database to Python" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,6 +19,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "playwithoctopus"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="5d507fcc-190f-4d5d-8833-04132bdee997" />
+        <option name="url" value="https://github.com/playwithoctopus/WebAutoML.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.txt" root0="FORCE_HIGHLIGHTING" />
@@ -65,7 +77,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715264843528</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add MSSQLServer.py: Class connect MySQL database to Python">
+      <option name="closed" value="true" />
+      <created>1715265084053</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715265084053</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -81,6 +101,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initialize WebSite Auto Machine Learning project" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initialize WebSite Auto Machine Learning project" />
+    <MESSAGE value="Add MSSQLServer.py: Class connect MySQL database to Python" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add MSSQLServer.py: Class connect MySQL database to Python" />
   </component>
 </project>
