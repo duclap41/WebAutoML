@@ -15,42 +15,29 @@
 <body>
     <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center p-5">
         <h1>ĐĂNG NHẬP</h1>
-        <form class="d-flex flex-column w-25 h-50">
-            <!-- Email input -->
+
+        <form class="d-flex flex-column w-25 h-50" method="POST" action="">
+            {% csrf_token %}
             <div class="form-outline mb-4">
-                <input type="email" id="form2Example1" class="form-control" />
-                <label class="form-label" for="form2Example1">Email</label>
+                <label class="form-label" for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" />
             </div>
 
-            <!-- Password input -->
             <div class="form-outline mb-4">
-                <input type="password" id="form2Example2" class="form-control" />
-                <label class="form-label" for="form2Example2">Mật khẩu</label>
+                <label class="form-label" for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" class="form-control" />
             </div>
 
-            <!-- Submit button -->
-            <button type="button" class="btn btn-primary btn-block mb-4">Đăng nhập</button>
+            <button type="submit" value="Login" class="btn btn-primary btn-block mb-4">Đăng nhập</button>
 
-            <!-- Register buttons -->
+            {{form.errors}}
+
+            {% for message in messages %}
+            <p id="messages"> {{message}} </p>
+            {% endfor %}
+
             <div class="text-center">
-                <p>Chưa có tài khoản? <a href="#!">Đăng ký</a></p>
-                <hr>
-                <p>Hoặc đăng nhập bằng:</p>
-                <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fa fa-facebook-f"></i>
-                </button>
-
-                <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fa fa-google"></i>
-                </button>
-
-                <button type="button" class="btn btn-link btn-floating mx-1">
-                    <i class="fa fa-twitter"></i>
-                </button>
-
-                <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                    <i class="fa fa-github"></i>
-                </button>
+                <p>Chưa có tài khoản? <a href="/signup">Đăng ký</a></p>
             </div>
         </form>
     </div>
