@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,5 +9,8 @@
 </head>
 <body>
     <h1>Customer homepage</h1>
+
+    <span>Hello, {{request.user}} </span>
+    <span><a href="/logout">Logout</a></span>
 </body>
 </html>
