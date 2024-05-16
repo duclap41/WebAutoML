@@ -56,3 +56,31 @@ def signup(request):
 
     context = {'form':form}
     return render(request, 'accounts/signup.html', context)
+
+def upload(request):
+    context = {}
+    return render(request, 'accounts/upload.html', context)
+
+def model(request):
+    context = {}
+    return render(request, 'accounts/model.html', context)
+
+def profile(request):
+    context = {}
+    return render(request, 'accounts/profile.html', context)
+
+def download(request):
+    context = {}
+    return render(request, 'accounts/download.html', context)
+
+def overview(request):
+    context = {}
+    return render(request, 'accounts/overview.html', context)
+
+def alert(request):
+    context = {}
+    return render(request, 'accounts/alert.html', context)
+
+def reproduction(request):
+    context = {}
+    return render(request, 'accounts/reproduction.html', context)

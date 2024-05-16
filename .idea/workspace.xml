@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f5c4fcb2-240c-43a7-97b7-2d0fc9b89707" name="Changes" comment="Add MSSQLServer.py: Class connect MySQL database to Python">
-      <change beforePath="$PROJECT_DIR$/Web/automl/accounts/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Web/automl/accounts/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Web/automl/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Web/automl/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Web/automl/automl/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Web/automl/automl/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Web/automl/automl/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Web/automl/automl/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +39,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.txt" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -56,7 +56,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "nguyen",
-    "last_opened_file_path": "C:/Users/asus/Downloads/ProjectPython/WebAutoML"
+    "last_opened_file_path": "C:/Users/asus/DjangoProjects/automl"
   }
 }]]></component>
   <component name="SharedIndexes">
