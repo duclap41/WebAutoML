@@ -1,0 +1,30 @@
+{% extends 'accounts/homepage.html' %}
+
+{% block content %}
+
+<div class="mt-3">
+    <h2>Mô hình hóa</h2>
+</div>
+
+<select name="targets" id="target" class="w-75">
+    <option value="age">Age</option>
+    <option value="passengerid">PassengerID</option>
+    <option value="passengername">PassengerName</option>
+</select>
+
+<table class="table">
+    <tr>
+        <th>Heading</th>
+        <th>Heading</th>
+        <th>Heading</th>
+    </tr>
+    <tr>
+        <td>Row</td>
+        <td>Row</td>
+        <td>Row</td>
+    </tr>
+</table>
+
+<a href="/download" class="btn btn-primary">Tiếp theo</a>
+
+{% endblock %}
