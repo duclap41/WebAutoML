@@ -6,6 +6,20 @@
     <h2>Tải dữ liệu của bạn lên tại đây</h2>
 </div>
 
+<form action="" method="post" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{ form.as_p }}
+    <!-- <input type="file" name="my_file"/> -->
+    <button type="submit">Upload</button>
+
+    {{form.errors}}
+
+    {% for message in messages %}
+    <p id="messages"> {{message}} </p>
+    {% endfor %}
+</form>
+
+
 <table class="table">
     <tr>
         <th>Heading</th>
