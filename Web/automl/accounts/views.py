@@ -7,10 +7,6 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import CreateUserForm
-import pandas as pd
-from AutoML import *
-import urllib, base64
 from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm
 from django.urls import reverse_lazy
 

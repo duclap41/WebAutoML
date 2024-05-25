@@ -27,6 +27,10 @@ sys.path.insert(0, str(PROJECT_ROOT))
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# File upload settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -92,7 +96,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'automl',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'nguyen1100',
         'HOST': 'localhost',
         'PORT': '3306'
 
