@@ -6,18 +6,26 @@
 
 <p>overview</p>
 
-<table class="table">
+<div>
+    <table class="table_01">
     <tr>
-        <th>Heading</th>
-        <th>Heading</th>
-        <th>Heading</th>
+        <th>Dataset statistics</th>
+        <th>Values</th>
     </tr>
     <tr>
-        <td>Row</td>
-        <td>Row</td>
-        <td>Row</td>
+        <th>Number of Features</th>
+        <td>{{ num_features }}</td>
+    </tr>
+    <tr>
+        <th>Number of Samples</th>
+        <td>{{ num_samples }}</td>
     </tr>
 </table>
+</div>
+<div>
+    <h2>Visualize</h2>
+    <img src="data:image/png;base64,{{ graphic }}" alt="plot">
+</div>
 
 <a href="/model" class="btn btn-primary">Tiếp theo</a>
 

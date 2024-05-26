@@ -1,3 +1,5 @@
+import io
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -5,6 +7,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import CreateUserForm
+import pandas as pd
+from AutoML import *
+import urllib, base64
 
 
 @login_required(login_url='signin')
@@ -58,7 +63,15 @@ def signup(request):
     return render(request, 'accounts/signup.html', context)
 
 def upload(request):
-    context = {}
+    df = pd.read_csv("D:\\ie221_project\\WebAutoML\\Data\\vehicle.csv")
+    # convert df to dict
+    columns = df.columns.tolist()
+
+    data = []
+    for _, row in df.iterrows():
+        data.append(row.tolist())
+
+    context = {'data': data, 'columns': columns}
     return render(request, 'accounts/upload.html', context)
 
 def model(request):
@@ -74,7 +87,23 @@ def download(request):
     return render(request, 'accounts/download.html', context)
 
 def overview(request):
-    context = {}
+    eda = EDA(pd.read_csv("D:\\ie221_project\\WebAutoML\\Data\\vehicle.csv"))
+    num_ft = len(eda.columns)
+    num_samp = eda.entries
+    # add graphic to wen
+    _, plot = eda.correlation(visual=True)
+    buffer = io.BytesIO()
+    plot.savefig(buffer, format='png')
+    buffer.seek(0)
+    img_plot = buffer.getvalue()
+    buffer.close()
+    graphic = base64.b64encode(img_plot)
+    graphic = graphic.decode('utf-8')
+
+    context = {'num_features':num_ft,
+               'num_samples':num_samp,
+               'graphic':graphic
+               }
     return render(request, 'accounts/overview.html', context)
 
 def alert(request):
