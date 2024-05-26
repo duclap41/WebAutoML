@@ -27,6 +27,11 @@
             {{form.last_name}}
         </div>
         <button class="btn btn-primary">Lưu</button>
+        {{form.errors}}
+
+        {% for message in messages %}
+            <p id="messages"> {{message}} </p>
+        {% endfor %}
     </form>
 </div>
 

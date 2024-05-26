@@ -15,5 +15,5 @@ urlpatterns = [
     path('model/', views.model, name='model'),
     path('download/', views.download, name='download'),
     path('editprofile/', views.editprofile, name='editprofile'),
-
+    path('changepassword/', views.changepassword, name='changepassword'),
 ]
