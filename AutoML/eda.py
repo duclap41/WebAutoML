@@ -64,9 +64,9 @@ class EDA:
         sns.heatmap(corr_matrix[targets], annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
         #plt.savefig('/imgs/corr.png')
         plt.title(title)
-        plt.show()
+        #plt.show()
 
-        return corr_summary
+        return corr_summary, plt
 
     def corr_2cols(self, col1="", col2=""):
         """Return correlation value between 2 target columns"""
@@ -212,6 +212,7 @@ class EDA:
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('../Data/titanic.csv')
+    df = pd.read_csv('../Data/vehicle.csv')
     eda = EDA(df)
-    print(eda.interaction('VRDeck', 'FoodCourt'))
+    _, plot = eda.correlation(visual=True)
+    plot.show()
