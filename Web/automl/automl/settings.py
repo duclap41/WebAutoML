@@ -19,6 +19,7 @@ sys.path.append(r'')
 
 # Build paths inside the project like this:   / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 # add lib path
 PROJECT_ROOT = BASE_DIR.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -26,11 +27,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # File upload settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# File upload settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/

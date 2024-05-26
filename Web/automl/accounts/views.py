@@ -1,5 +1,3 @@
-import io
-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import generic
@@ -7,8 +5,15 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
 from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm
 from django.urls import reverse_lazy
+
+import io
+import pandas as pd
+from AutoML import *
+import urllib, base64
+
 
 
 @login_required(login_url='signin')
@@ -81,6 +86,26 @@ def upload(request):
     # convert df to dict
     columns = df.columns.tolist()
 
+    context = {'form':form}
+    return render(request, 'accounts/editprofile.html', context)
+
+@login_required
+def upload(request):
+   # upload file
+    if request.method == 'POST':
+        form = UploadUserFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_file = form.save(commit=False)
+            user_file.user = request.user  # Gán user đang đăng nhập
+            user_file.save()
+            messages.info(request, 'Upload File thành công')
+            return redirect('upload')  # Thay thế 'success_url' bằng URL thực tế của bạn
+    else:
+        form = UploadUserFileForm()
+        
+    # load file data to table
+    df = pd.read_csv("D:\\ie221_project\\WebAutoML\\Data\\vehicle.csv")
+    columns = df.columns.tolist()
     data = []
     for _, row in df.iterrows():
         data.append(row.tolist())
@@ -97,7 +122,10 @@ def upload(request):
     else:
         form = UploadUserFileForm()
 
-    context = {'form': form}
+    context = {'form': form,
+              'data': data,
+              'columns': columns
+              }
     return render(request, 'accounts/upload.html', context)
 
 def model(request):
