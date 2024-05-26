@@ -5,8 +5,15 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
 from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm
 from django.urls import reverse_lazy
+
+import io
+import pandas as pd
+from AutoML import *
+import urllib, base64
+
 
 
 @login_required(login_url='signin')
@@ -75,6 +82,7 @@ def editprofile(request):
 
 @login_required
 def upload(request):
+   # upload file
     if request.method == 'POST':
         form = UploadUserFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -85,8 +93,18 @@ def upload(request):
             return redirect('upload')  # Thay thế 'success_url' bằng URL thực tế của bạn
     else:
         form = UploadUserFileForm()
+        
+    # load file data to table
+    df = pd.read_csv("D:\\ie221_project\\WebAutoML\\Data\\vehicle.csv")
+    columns = df.columns.tolist()
+    data = []
+    for _, row in df.iterrows():
+        data.append(row.tolist())
 
-    context = {'form': form}
+    context = {'form': form,
+              'data': data,
+              'columns' columns
+              }
     return render(request, 'accounts/upload.html', context)
 
 def model(request):
@@ -102,7 +120,23 @@ def download(request):
     return render(request, 'accounts/download.html', context)
 
 def overview(request):
-    context = {}
+    eda = EDA(pd.read_csv("D:\\ie221_project\\WebAutoML\\Data\\vehicle.csv"))
+    num_ft = len(eda.columns)
+    num_samp = eda.entries
+    # add graphic to wen
+    _, plot = eda.correlation(visual=True)
+    buffer = io.BytesIO()
+    plot.savefig(buffer, format='png')
+    buffer.seek(0)
+    img_plot = buffer.getvalue()
+    buffer.close()
+    graphic = base64.b64encode(img_plot)
+    graphic = graphic.decode('utf-8')
+
+    context = {'num_features':num_ft,
+               'num_samples':num_samp,
+               'graphic':graphic
+               }
     return render(request, 'accounts/overview.html', context)
 
 def alert(request):
