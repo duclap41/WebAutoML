@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import sys
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+sys.path.append(r'')
+
+# Build paths inside the project like this:   / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# add lib path
+PROJECT_ROOT = BASE_DIR.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -80,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'automl',
         'USER': 'root',
-        'PASSWORD': 'mysql123456',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306'
 
