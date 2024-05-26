@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import generic
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm
 from django.urls import reverse_lazy
 
-import io
-import pandas as pd
-from AutoML import *
-import urllib, base64
+# import io
+# import pandas as pd
+# from AutoML import *
+# import urllib, base64
 
 
 
@@ -80,6 +80,20 @@ def editprofile(request):
     context = {'form':form}
     return render(request, 'accounts/editprofile.html', context)
 
+@login_required(login_url='signin')
+def changepassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Tài khoản đã cập nhật mật khẩu thành công')
+    else:
+        form = PasswordChangeForm(user=request.user) 
+
+    context = {'form':form}
+    return render(request, 'accounts/changepassword.html', context)
+
 @login_required
 def upload(request):
    # upload file
@@ -101,9 +115,21 @@ def upload(request):
     for _, row in df.iterrows():
         data.append(row.tolist())
 
+    context = {'data': data, 'columns': columns}
+    if request.method == 'POST':
+        form = UploadUserFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_file = form.save(commit=False)
+            user_file.user = request.user  # Gán user đang đăng nhập
+            user_file.save()
+            messages.info(request, 'Upload File thành công')
+            return redirect('upload')  # Thay thế 'success_url' bằng URL thực tế của bạn
+    else:
+        form = UploadUserFileForm()
+
     context = {'form': form,
               'data': data,
-              'columns' columns
+              'columns': columns
               }
     return render(request, 'accounts/upload.html', context)
 
