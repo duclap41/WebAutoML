@@ -16,7 +16,8 @@ class Model:
                              remove_outliers=True,
                             imputation_type='simple',
                             numeric_imputation='mean',
-                            categorical_imputation='mode')
+                            categorical_imputation='mode',
+                            use_gpu=False)
         df_preprocess_info = classification.pull()
         best_model = classification.compare_models()
         df_compare = classification.pull()
