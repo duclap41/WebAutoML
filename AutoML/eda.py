@@ -107,7 +107,7 @@ class EDA:
                     'Outliers': [int(temp.shape[0])]
                 })], ignore_index=True)
 
-        # TODO: add zscore algorithm
+        # add zscore algorithm
 
         # using Boxplot
         if size is not None:
