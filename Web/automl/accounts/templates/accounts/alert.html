@@ -4,21 +4,88 @@
 
 {% include 'accounts/profile_tab.html' %}
 
-<p>alert</p>
 
-<table class="table">
-    <tr>
-        <th>Heading</th>
-        <th>Heading</th>
-        <th>Heading</th>
-    </tr>
-    <tr>
-        <td>Row</td>
-        <td>Row</td>
-        <td>Row</td>
-    </tr>
-</table>
+<div class="table-const-uniq">
+    <h1>Constants or Unique Values</h1>
+    <table style="width: 620px;">
+        <tr>
+            <th>Constants Columns</th>
+            <td>{{ data_const }}</td>
+        </tr>
+        <tr>
+            <th>Unique Value Columns</th>
+            <td>{{ data_uniq }}</td>
+        </tr>
+    </table>
+</div>
 
-<a href="/model" class="btn btn-primary">Tiếp theo</a>
+<div class="table-missval">
+    <h1>Number Missing Value of Columns</h1>
+    <table style="width: 620px;">
+        <thead>
+            <tr>
+                {% for col in cols_missval %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data_missval %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="table-imbal">
+    <h1>Imbalanced Columns</h1>
+    <table style="width: 620px;">
+        <thead>
+            <tr>
+                {% for col in cols_imbal %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data_imbal %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="table-out">
+    <h1>Number Outlier of Columns</h1>
+    <table style="width: 620px;">
+        <thead>
+            <tr>
+                {% for col in cols_out %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data_out %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<img src="data:image/png;base64,{{ gfx_out }}" alt="plot">
+
+<a href="features" class="btn btn-primary">Tiếp theo</a>
 
 {% endblock %}
