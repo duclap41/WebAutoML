@@ -42,13 +42,13 @@ class EDA:
 
     def correlation(self, targets=[],
                     drops=[],
-                    visual=False,
+                    rotate=0,
                     size=None,
                     title='Correlation Matrix of Features'):
         """Return correlation of every column\n
         targets is list columns, want to compare with others\n
         drops is list columns, want to ignore\n
-        visual is visualized\n
+        Rotate is the angle of label rotation
         size is figure size\n
         title is title of plot"""
 
@@ -60,98 +60,84 @@ class EDA:
         corr_summary = corr_matrix[targets].sort_values(by=targets[0], ascending=False)
 
         # Visualize using heat map
-        plt.figure(figsize=size)
+        if size is not None:
+            plt.figure(figsize=size)
         sns.heatmap(corr_matrix[targets], annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)
-        #plt.savefig('/imgs/corr.png')
+        plt.xticks(rotation=rotate)
         plt.title(title)
-        #plt.show()
 
         return corr_summary, plt
-
-    def corr_2cols(self, col1="", col2=""):
-        """Return correlation value between 2 target columns"""
-        if col1 == "":
-            col1 = self._df.columns[0]
-        if col2 == "":
-            col2 = self._df.columns[-1]
-
-        corr_matrix = self._df[[col1, col2]].corr()
-        return corr_matrix.iloc[0, 1]
 
     # make clear data
     def checkOutliers(self, algo="IQR",
                       coef=1.5,
-                      visual=False,
                       size=None,
                       drop=[],
                       rotate=0,
-                      title="Box Plot of Feature Columns") -> tuple[int, DataFrame]:
+                      title="Box Plot of Feature Columns") -> tuple[Any, DataFrame, plt]:
         """
-        Check outliers in every feature, return columns have outliers, ignoring column has data type is object or bool\n
-        Algo is the algorithm will use to compute outliers\n
-        Coef is IQR coefficient (1.5, 2, 3)\n
-        Visual is visualized\n
-        Size is size of figure\n
-        Drop is list of columns want to ignore\n
-        Rotate is the angle of label rotation\n
+        Check outliers in every feature, return columns have outliers, ignoring column has data type is object or bool
+        Algo is the algorithm will use to compute outliers
+        Coef is IQR coefficient (1.5, 2, 3)
+        Size is size of figure
+        Drop is list of columns want to ignore
+        Rotate is the angle of label rotation
         Title is title of boxplot
         """
         # drop all columns can't check outliers
         rmCols = [col for col in self._df.columns
                  if (str(self._df[col].dtype) in ('object', 'bool'))]
         chk_outliers = self._df.drop(columns=rmCols)
-        outliers = pd.DataFrame({
-            'Coulumns':[],
-            'Ouliers':[]
+        df_outliers = pd.DataFrame({
+            'Columns': [],
+            'Outliers': []
         })
 
         if algo == "IQR":
             # IQR (Interquartile Range)
             for col in chk_outliers:
-                q1 = self._df[col].quantile(0.25) # percentile 25
-                q3 = self._df[col].quantile(0.75) # percentile 70
+                q1 = self._df[col].quantile(0.25)  # percentile 25
+                q3 = self._df[col].quantile(0.75)  # percentile 70
                 iqr = q3 - q1
                 lower_bound = q1 - coef * iqr
                 upper_bound = q3 + coef * iqr
                 temp = chk_outliers[(chk_outliers[col] < lower_bound) | (chk_outliers[col] > upper_bound)]
-                outliers = pd.concat([outliers, pd.DataFrame({
-                    'Coulumns': [col],
-                    'Ouliers': [int(temp.shape[0])]
+                df_outliers = pd.concat([df_outliers, pd.DataFrame({
+                    'Columns': [col],
+                    'Outliers': [int(temp.shape[0])]
                 })], ignore_index=True)
 
-        if visual:
-            # using Boxplot
-            plt.figure(figsize=size)
-            sns.boxplot(data=chk_outliers.drop(columns=drop))
-            plt.xticks(rotation=rotate)
-            plt.title(title+"\n The dots are outliers")
-            plt.show()
+        # TODO: add zscore algorithm
 
-        total_ouliers = outliers["Ouliers"].sum()
-        return total_ouliers, outliers
+        # using Boxplot
+        if size is not None:
+            plt.figure(figsize=size)
+        sns.boxplot(data=chk_outliers.drop(columns=drop))
+        plt.xticks(rotation=rotate)
+        plt.title(title+"\n The dots are outliers")
+
+        return int(df_outliers["Outliers"].sum()), df_outliers, plt
     def checkMissing(self) -> tuple[int, DataFrame]:
         """Check missing value in every feature, return total missing values and columns have missing values\n
         num_row is number of rows, want to see in missing values Dataframe
         """
         total_missvalues = self._df.isnull().sum().sum()
 
-        missval_cols = pd.DataFrame({
+        df_missval = pd.DataFrame({
             'Columns':[],
             'Missing Values':[]
         })
         for col in self._df.columns:
-            missval_cols = pd.concat([missval_cols, pd.DataFrame({
+            df_missval = pd.concat([df_missval, pd.DataFrame({
                 'Columns': [col],
-                'Missing Values': [self._df[col].isnull().sum()]
+                'Missing Values': [int(self._df[col].isnull().sum())]
             })], ignore_index=True)
 
-        return total_missvalues, missval_cols
+        return int(total_missvalues), df_missval
 
     def checkDuplicate(self):
-        """Return total duplicated rows in Dataframe"""
+        """Return total duplicated rows in Dataframe, and rows are duplicated"""
         return self._df.duplicated().sum()
-
-
 
     def checkImbalance(self):
         def is_imbalance(dataframe, col_name, threshold=0.9) -> bool:
@@ -175,7 +161,9 @@ class EDA:
                 'Imbalance': [is_imbalance(self._df, col)]
             })], ignore_index=True)
 
-        return df_imblances
+        total_col_imbalance = sum(1 for i in df_imblances['Imbalance'] if i)
+
+        return total_col_imbalance, df_imblances
 
     def check_constant_unique(self) -> dict:
         """Return dictionary contain columns have constant or unique value."""
@@ -192,27 +180,24 @@ class EDA:
         return cons_uni
 
     # features
-    def distribution(self, column, size=None, kde=True, title="Distribution"):
+    def distribution(self, column, size=None, kde=True):
         """Visualize distribution of feature using Histogram plot\n
         Size is size of figure\n
         kde is draw kde line or not"""
-        plt.figure(figsize=size)
+        if size is not None:
+            plt.figure(figsize=size)
         sns.histplot(self._df[column], kde=kde)
-        plt.title(title)
-        plt.show()
+        plt.title(f"Distribution of {column}")
+
+        return plt
 
     def interaction(self, col1, col2, size=None):
         """Visualize interaction between two features, don't use for 'object' or 'bool' columns"""
-        plt.figure(figsize=(8, 6))
+        if size is not None:
+            plt.figure(figsize=size)
         sns.scatterplot(x=col1, y=col2, data=self._df)
         plt.xlabel(col1)
         plt.ylabel(col2)
         plt.title(f'Interaction between {col1} and {col2}')
-        plt.show()
 
-
-if __name__ == '__main__':
-    df = pd.read_csv('../Data/vehicle.csv')
-    eda = EDA(df)
-    _, plot = eda.correlation(visual=True)
-    plot.show()
+        return plt
