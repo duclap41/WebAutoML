@@ -1,16 +1,18 @@
-<div>
-    <h3>Chào, {{request.user}}</h3>
+<div style="padding-left: 10px">
     <div>
+    <h3>Chào, {{request.user}}</h3>
+    <div style="margin-top: 20px;">
         <a href="/editprofile" class="btn btn-info">Sửa thông tin</a>
         <a href="/changepassword" class="btn btn-secondary">Đổi mật khẩu</a>
-        <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+        <a href="/history" class="btn btn-primary">Lịch sử</a>
+        <a href="/logout" class="btn btn-danger" style="margin-top: 10px">Đăng xuất</a>
     </div>
-</div>
+    </div>
 
-<h3 style="margin-top: 100px;">Các bước thực hiện:</h3>
-<div class="d-flex flex-column">
-    <a href="/upload">Tải dữ liệu</a>
-    <a href="/profile">Lập hồ sơ</a>
-    <a href="/model">Mô hình hóa</a>
-    <a href="/download">Tải kết quả</a>
+    <h3 style="margin-top: 100px;">Các bước thực hiện:</h3>
+    <div class="d-flex flex-column">
+        <a href="/upload">Tải dữ liệu</a>
+        <a href="/profile/overview">Khai phá dữ liệu</a>
+        <a href="/model">Mô hình hóa</a>
+    </div>
 </div>
