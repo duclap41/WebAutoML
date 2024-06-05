@@ -4,29 +4,65 @@
 
 {% include 'accounts/profile_tab.html' %}
 
-<p>overview</p>
-
 <div>
-    <table class="table_01">
-    <tr>
-        <th>Dataset statistics</th>
-        <th>Values</th>
-    </tr>
-    <tr>
-        <th>Number of Features</th>
-        <td>{{ num_features }}</td>
-    </tr>
-    <tr>
-        <th>Number of Samples</th>
-        <td>{{ num_samples }}</td>
-    </tr>
-</table>
-</div>
-<div>
-    <h2>Visualize</h2>
-    <img src="data:image/png;base64,{{ graphic }}" alt="plot">
+    <div>
+        <h1 style="al">Overview</h1>
+        <table class="table_01">
+        <tr>
+            <th>Dataset statistics</th>
+            <th>Values</th>
+        </tr>
+        <tr>
+            <th>Number of Features</th>
+            <td>{{ num_fts }}</td>
+        </tr>
+        <tr>
+            <th>Number of Samples</th>
+            <td>{{ num_samps }}</td>
+        </tr>
+        <tr>
+            <th>Missing cells</th>
+            <td>{{ num_miss }}</td>
+        </tr>
+        <tr>
+            <th>Number of Outliers</th>
+            <td>{{ num_outs }}</td>
+        </tr>
+        <tr>
+            <th>Number of Duplicate</th>
+            <td>{{ num_dups }}</td>
+        </tr>
+        <tr>
+            <th>Number of Imbalance Features</th>
+            <td>{{ num_imbas }}</td>
+        </tr>
+    </table>
+    </div>
+
+    <div>
+        <h1>Columns Dtype</h1>
+        <table>
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<a href="/model" class="btn btn-primary">Tiếp theo</a>
+
+<a href="alert" class="btn btn-primary">Tiếp theo</a>
 
 {% endblock %}
