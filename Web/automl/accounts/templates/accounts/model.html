@@ -2,29 +2,51 @@
 
 {% block content %}
 
-<div class="mt-3">
-    <h2>Mô hình hóa</h2>
+<h2>Mô hình hóa</h2>
+<p>Chọn một cột dữ liệu!</p>
+
+<div class="modeling" style="align-items: center;">
+    <form name="form_model" method="post">
+    {% csrf_token %}
+    <select name="col_model" class="w-75" style="min-width: 300px;">
+        {% for col in columns %}
+            <option value="{{ col }}" {% if col == col_model %}selected{% endif %}>{{ col }}</option>
+        {% endfor %}
+    </select>
+
+        <button type="submit" name="run_model" class="btn btn-primary pt-3 ">Run Model</button>
+    </form>
 </div>
 
-<select name="targets" id="target" class="w-75">
-    <option value="age">Age</option>
-    <option value="passengerid">PassengerID</option>
-    <option value="passengername">PassengerName</option>
-</select>
+{% if loading == True %}
+<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+{% endif %}
 
-<table class="table">
-    <tr>
-        <th>Heading</th>
-        <th>Heading</th>
-        <th>Heading</th>
-    </tr>
-    <tr>
-        <td>Row</td>
-        <td>Row</td>
-        <td>Row</td>
-    </tr>
-</table>
 
-<a href="/download" class="btn btn-primary">Tiếp theo</a>
+{% if loading == False %}
+<div>
+        <h1>Tổng kết mô hình</h1>
+        <table>
+            <thead>
+                <tr>
+                    {% for col in cols_compare %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data_compare %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
 
 {% endblock %}
