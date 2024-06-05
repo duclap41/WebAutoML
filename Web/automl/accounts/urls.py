@@ -11,9 +11,10 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/overview', views.overview, name='overview'),
     path('profile/alert', views.alert, name='alert'),
+    path('profile/features', views.features, name='features'),
     path('profile/reproduction', views.reproduction, name='reproduction'),
     path('model/', views.model, name='model'),
-    path('download/', views.download, name='download'),
     path('editprofile/', views.editprofile, name='editprofile'),
     path('changepassword/', views.changepassword, name='changepassword'),
+    path('history/', views.history, name='history'),
 ]
