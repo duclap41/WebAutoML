@@ -17,4 +17,4 @@ class ChangeUserForm(UserChangeForm):
 class UploadUserFileForm(ModelForm):
     class Meta:
         model = UserFile
-        fields = ['file']
+        fields = ['data_file']
