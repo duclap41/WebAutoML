@@ -1,4 +1,4 @@
-{% load static %}
+    {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@
         .table-container {
             width: 100%;
             max-width: 800px;
-            height: 400px;
+            height: 450px;
             overflow: auto;
             border: 1px solid #ccc;
             margin: 20px auto;
@@ -34,17 +34,20 @@
         th {
             background-color: #f2f2f2;
         }
+        h1 {
+            text-align: center;
+        }
     </style>
 
 </head>
 
 <body>
     <div class="d-flex w-100 h-100 m-0 p-0">
-        <div class="w-25 bg-dark text-white d-flex flex-column vh-100 p-2 gap-3">
+        <div class="w-25 bg-dark text-white d-flex flex-column vh-100 pt-3 gap-3">
             {% include 'accounts/navbar.html' %}            
         </div>
     
-        <div class="w-75 d-flex flex-column align-items-center vh-100 gap-3 p-2 overflow-auto">
+        <div class="w-75 d-flex flex-column align-items-center vh-100 gap-2 p-2 overflow-auto">
             {% block content %}
             
             {% endblock %}
