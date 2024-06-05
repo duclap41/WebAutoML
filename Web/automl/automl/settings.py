@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'automl',
         'USER': 'root',
-        'PASSWORD': 'nguyen1100',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306'
 
