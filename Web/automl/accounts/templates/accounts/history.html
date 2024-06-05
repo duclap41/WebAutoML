@@ -1,0 +1,28 @@
+{% extends 'accounts/homepage.html' %}
+{% block content %}
+
+<div class="w-100 h-100 d-flex flex-column p-3">
+    <h1>File History</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Files</th>
+                <th>Best Models</th>
+                <th>Best Results (Accuracy or MAE)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ forloop.counter }}</td> <!-- Index -->
+                <td><a href="/upload?file_id={{ file.id }}">{{ file.data_file }}</a></td> <!-- Link file -->
+                <td>{{ file.best_model }}</td>
+                <td>{{ file.best_result }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

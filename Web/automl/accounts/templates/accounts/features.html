@@ -1,0 +1,46 @@
+{% extends 'accounts/profile.html' %}
+
+{% block content %}
+
+{% include 'accounts/profile_tab.html' %}
+
+<div class="distribution" style="align-items: center;">
+    <form name="form_distri" method="post">
+    {% csrf_token %}
+    <select name="col_distri" class="w-75" onchange="this.form.submit()">
+        <option value="{{ col_distri }}" style="display: none;">{{ col_distri }}</option>
+        {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    </form>
+    <img src="data:image/png;base64,{{ gfx_distri }}" alt="plot">
+</div>
+
+<div class="interaction" style="align-items: center;">
+    <form name="form_inter" method="post">
+    {% csrf_token %}
+    <select name="col_inter1" class="w-75" onchange="this.form.submit()">
+        <option value="{{ col_inter1 }}" style="display: none;">{{ col_inter1 }}</option>
+        {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <select name="col_inter2" class="w-75" onchange="this.form.submit()">
+        <option value="{{ col_inter2 }}" style="display: none;">{{ col_inter2 }}</option>
+        {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    </form>
+    <img src="data:image/png;base64,{{ gfx_inter }}" alt="plot">
+</div>
+
+<div>
+    <img src="data:image/png;base64,{{ gfx_corr }}" alt="plot">
+</div>
+
+<a href="/model" class="btn btn-primary">Tiếp theo</a>
+
+{% endblock %}
