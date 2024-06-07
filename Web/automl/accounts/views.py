@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render, redirect, get_object_or_404
@@ -285,10 +286,17 @@ def history(request):
 
 @login_required(login_url='signin')
 def model(request):
+    def get_value_error(traceback_str):
+        value_error_lines = []
+        for line in traceback_str.split('\n'):
+            if 'ValueError:' in line:
+                value_error_lines.append(line.strip())
+        return value_error_lines
+
     global dataframe
     md = Model(dataframe)
     columns = dataframe.columns
-    col_model = None
+    col_model = columns[1]
     loading = True
     drop_columns = []
 
@@ -303,41 +311,56 @@ def model(request):
                              form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
 
         # Run model
-        if md.check_type(target_col=col_model) in ["Discrete", "Categorical"]:
-            _, df_compare = md.classify_models(target_col=col_model, drop_features=drop_columns)
-            best_model = df_compare['Model'][0]
-            best_result = f"{df_compare['Accuracy'][0]} (Accuracy)"
-        else:
-            _, df_compare = md.regressor_models(target_col=col_model, drop_features=drop_columns)
-            best_model = df_compare['Model'][0]
-            best_result = f"{df_compare['MAE'][0]} (MAE)"
+        error_message = None
+        try:
+            if md.check_type(target_col=col_model) in ["Discrete", "Categorical"]:
+                _, df_compare = md.classify_models(target_col=col_model, drop_features=drop_columns)
+                best_model = df_compare['Model'][0]
+                best_result = f"{df_compare['Accuracy'][0]} (Accuracy)"
+            else:
+                _, df_compare = md.regressor_models(target_col=col_model, drop_features=drop_columns)
+                best_model = df_compare['Model'][0]
+                best_result = f"{df_compare['MAE'][0]} (MAE)"
 
-        # save to database
-        global curr_id
-        if curr_id is not None:
-            user_file = get_object_or_404(models.UserFile, id=curr_id)
+            cols_compare, data_compare = AutoMLView.deploy_dataframe(df_compare)
+
+            # save to database
+            global curr_id
+            if curr_id is not None:
+                user_file = get_object_or_404(models.UserFile, id=curr_id)
+
+            else:
+                latest_user_file = models.UserFile.objects.order_by('-id').first()
+                user_file = get_object_or_404(models.UserFile, id=latest_user_file.id)
 
             user_file.best_model = best_model
             user_file.best_result = best_result
             user_file.save()
-        else:
-            latest_user_file = models.UserFile.objects.order_by('-id').first()
-            user_file = get_object_or_404(models.UserFile, id=latest_user_file.id)
 
-            user_file.best_model = best_model
-            user_file.best_result = best_result
-            user_file.save()
+        except Exception as e:
+            error_message = get_value_error(traceback.format_exc())
 
         loading = False
 
-        cols_compare, data_compare = AutoMLView.deploy_dataframe(df_compare)
+        if error_message is not None:
+            context = {'columns': columns,
+                       'col_picked': col_model,
+                       'choose_features': [],
+                       'cols_compare': [],
+                       'data_compare': [],
+                       'form': form_choose_features,
+                       'loading': loading,
+                       'error': error_message}
+            return render(request, 'accounts/model.html', context)
+
         context = {'columns': columns,
                    'col_picked': col_model,
                    'choose_features': dataframe.drop(drop_columns + [col_model], axis=1).columns.tolist(),
                    'cols_compare': cols_compare,
                    'data_compare': data_compare,
                    'form': form_choose_features,
-                   'loading': loading}
+                   'loading': loading,
+                   'error': error_message}
         return render(request, 'accounts/model.html', context)
 
     else:

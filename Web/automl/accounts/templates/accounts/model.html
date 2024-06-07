@@ -31,28 +31,35 @@
 
 
 {% if loading == False %}
-<div>
-    <p><b>Features:</b> {{ choose_features }}</p>
-        <h1>Tổng kết mô hình</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for col in cols_compare %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data_compare %}
+    {% if error is not None %}
+        <h3>Lỗi:</h3>
+        {% for e in error %}
+        <p> {{ e }} </p>
+        {% endfor %}
+    {% else %}
+    <div>
+        <p><b>Features:</b> {{ choose_features }}</p>
+            <h1>Tổng kết mô hình</h1>
+            <table>
+                <thead>
                     <tr>
-                        {% for cell in row %}
-                            <td>{{ cell }}</td>
+                        {% for col in cols_compare %}
+                            <th>{{ col }}</th>
                         {% endfor %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    {% for row in data_compare %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% endblock %}
