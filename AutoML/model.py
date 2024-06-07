@@ -8,35 +8,38 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pycaret import classification, regression
 
+
 class Model:
-    def __init__(self, dataframe:DataFrame):
+    def __init__(self, dataframe: DataFrame):
         self._df = dataframe
 
     def check_type(self, target_col):
         column = self._df[target_col]
-        if pd.api.types.is_numeric_dtype(column):
+        if str(column.dtype) in ['bool', 'object']:
+            return "Categorical"
+
+        elif pd.api.types.is_numeric_dtype(column):
             if column.nunique() / len(column) < 0.01:
                 return "Discrete"
             else:
                 return "Continuous"
-        elif str(column.dtype) in ['bool', 'object']:
-            return "Categorical"
 
     def classify_models(self, target_col, drop_features=[], save_model=False, save_path=any):
         """Compare all classifier models in pycaret, take model give best result"""
         data = self._df.drop(columns=drop_features)
         if data[target_col].isnull().any():
-            if pd.api.types.is_numeric_dtype(data[target_col]):
-                data[target_col] = data[target_col].fillna(data[target_col].mean())
+            if str(data[target_col].dtype) in ['bool', 'object']:
+                unique_values = data[target_col].dropna().unique()
+                data[target_col] = data[target_col].fillna(np.random.choice(unique_values))
             else:
-                data[target_col] = data[target_col].fillna(data[target_col].mode().iloc[0])
-        classification.setup(data=self._df.drop(columns=drop_features),
-                            target=target_col,
-                            remove_outliers=True,
-                            imputation_type='simple',
-                            numeric_imputation='mean',
-                            categorical_imputation='mode',
-                            use_gpu=False)
+                data[target_col] = data[target_col].fillna(data[target_col].mean())
+        classification.setup(data=data,
+                             target=target_col,
+                             remove_outliers=True,
+                             imputation_type='simple',
+                             numeric_imputation='mean',
+                             categorical_imputation='mode',
+                             use_gpu=False)
         df_preprocess_info = classification.pull()
         best_model = classification.compare_models()
         df_compare = classification.pull()
@@ -51,12 +54,12 @@ class Model:
         data = self._df.drop(columns=drop_features)
         data[target_col] = data[target_col].fillna(data[target_col].mean())
         regression.setup(data=data,
-                        target=target_col,
-                        remove_outliers=True,
-                        imputation_type='simple',
-                        numeric_imputation='mean',
-                        categorical_imputation='mode',
-                        use_gpu=False)
+                         target=target_col,
+                         remove_outliers=True,
+                         imputation_type='simple',
+                         numeric_imputation='mean',
+                         categorical_imputation='mode',
+                         use_gpu=False)
         df_preprocess_info = regression.pull()
         best_model = regression.compare_models()
         df_compare = regression.pull()
@@ -66,8 +69,9 @@ class Model:
 
         return df_preprocess_info, df_compare
 
+
 if __name__ == '__main__':
-    df = pd.read_csv('../Data/vehicle.csv')
+    df = pd.read_csv('../Data/titanic.csv')
     md = Model(df)
-    # _, df = md.classify_models(target_col='Oldpeak')
-    print(md.check_type('RoadSlope_100ms'))
+    #_, df = md.classify_models(target_col='Transported')
+    print(md.check_type('Transported'))
