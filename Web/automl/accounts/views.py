@@ -299,6 +299,10 @@ def model(request):
     col_model = columns[1]
     loading = True
     drop_columns = []
+    choose_features = []
+    cols_compare = []
+    data_compare = []
+
 
     ChooseFeatureForm = create_choose_features_form(columns)
     if request.method == 'POST':
@@ -309,6 +313,7 @@ def model(request):
         if form_choose_features.is_valid():
             drop_columns = [form_choose_features.fields[f'checkbox_{i}'].label for i in range(len(columns)) if
                              form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
+            choose_features = dataframe.drop(drop_columns + [col_model], axis=1).columns.tolist()
 
         # Run model
         error_message = None
@@ -335,6 +340,8 @@ def model(request):
 
             user_file.best_model = best_model
             user_file.best_result = best_result
+            user_file.last_target = col_model
+            user_file.last_features = ', '.join(choose_features)
             user_file.save()
 
         except Exception as e:
@@ -345,9 +352,9 @@ def model(request):
         if error_message is not None:
             context = {'columns': columns,
                        'col_picked': col_model,
-                       'choose_features': [],
-                       'cols_compare': [],
-                       'data_compare': [],
+                       'choose_features': choose_features,
+                       'cols_compare': cols_compare,
+                       'data_compare': data_compare,
                        'form': form_choose_features,
                        'loading': loading,
                        'error': error_message}
@@ -355,7 +362,7 @@ def model(request):
 
         context = {'columns': columns,
                    'col_picked': col_model,
-                   'choose_features': dataframe.drop(drop_columns + [col_model], axis=1).columns.tolist(),
+                   'choose_features': choose_features,
                    'cols_compare': cols_compare,
                    'data_compare': data_compare,
                    'form': form_choose_features,

@@ -8,6 +8,8 @@
             <tr>
                 <th>Index</th>
                 <th>Files</th>
+                <th>Last Target</th>
+                <th>Last Features</th>
                 <th>Best Models</th>
                 <th>Best Results (Accuracy or MAE)</th>
             </tr>
@@ -17,6 +19,8 @@
             <tr>
                 <td>{{ forloop.counter }}</td> <!-- Index -->
                 <td><a href="/upload?file_id={{ file.id }}">{{ file.data_file }}</a></td> <!-- Link file -->
+                <td>{{ file.last_target }}</td>
+                <td>{{ file.last_features }}</td>
                 <td>{{ file.best_model }}</td>
                 <td>{{ file.best_result }}</td>
             </tr>
