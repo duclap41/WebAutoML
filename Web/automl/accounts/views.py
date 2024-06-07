@@ -303,14 +303,15 @@ def model(request):
                              form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
 
         # Run model
-        if str(dataframe[col_model].dtype) != 'bool':
-            _, df_compare = md.regressor_models(target_col=col_model, drop_features=drop_columns)
-            best_model = df_compare['Model'][0]
-            best_result = df_compare['MAE'][0]
-        else:
+        if md.check_type(target_col=col_model) in ["Discrete", "Categorical"]:
             _, df_compare = md.classify_models(target_col=col_model, drop_features=drop_columns)
             best_model = df_compare['Model'][0]
-            best_result = df_compare['Accuracy'][0]
+            best_result = f"{df_compare['Accuracy'][0]} (Accuracy)"
+        else:
+            _, df_compare = md.regressor_models(target_col=col_model, drop_features=drop_columns)
+            best_model = df_compare['Model'][0]
+            best_result = f"{df_compare['MAE'][0]} (MAE)"
+
         # save to database
         global curr_id
         if curr_id is not None:
@@ -332,7 +333,7 @@ def model(request):
         cols_compare, data_compare = AutoMLView.deploy_dataframe(df_compare)
         context = {'columns': columns,
                    'col_picked': col_model,
-                   'choose_features': dataframe.drop(drop_columns + [col_model], axis=1).columns,
+                   'choose_features': dataframe.drop(drop_columns + [col_model], axis=1).columns.tolist(),
                    'cols_compare': cols_compare,
                    'data_compare': data_compare,
                    'form': form_choose_features,
