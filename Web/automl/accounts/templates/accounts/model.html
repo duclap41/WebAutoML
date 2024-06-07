@@ -3,18 +3,23 @@
 {% block content %}
 
 <h2>Mô hình hóa</h2>
-<p>Chọn một cột dữ liệu!</p>
 
-<div class="modeling" style="align-items: center;">
+<div class="modeling" style="">
+    <p>Chọn một cột dữ liệu làm Target!</p>
     <form name="form_model" method="post">
     {% csrf_token %}
     <select name="col_model" class="w-75" style="min-width: 300px;">
+        <option value="{{ col_picked }}" style="display: none;">{{ col_picked }}</option>
         {% for col in columns %}
             <option value="{{ col }}" {% if col == col_model %}selected{% endif %}>{{ col }}</option>
         {% endfor %}
     </select>
-
-        <button type="submit" name="run_model" class="btn btn-primary pt-3 ">Run Model</button>
+    <p>Chọn những cột sẽ làm đặc trưng!</p>
+    <p>Đừng bỏ chọn cột làm Target!</p>
+    <div style="width: 300px; height: 400px; overflow: auto; border: 1px solid #ccc;">
+            {{ form.as_p }}
+    </div>
+        <button type="submit" name="run_model" class="btn btn-primary mt-2">Run Model</button>
     </form>
 </div>
 
@@ -27,6 +32,7 @@
 
 {% if loading == False %}
 <div>
+    <p><b>Features:</b> {{ choose_features }}</p>
         <h1>Tổng kết mô hình</h1>
         <table>
             <thead>

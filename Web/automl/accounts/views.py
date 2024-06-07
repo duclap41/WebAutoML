@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from . import models
 
-from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm
+from .forms import CreateUserForm, ChangeUserForm, UploadUserFileForm, create_choose_features_form
 from django.urls import reverse_lazy
 
 import io
@@ -290,44 +290,60 @@ def model(request):
     columns = dataframe.columns
     col_model = None
     loading = True
+    drop_columns = []
 
+    ChooseFeatureForm = create_choose_features_form(columns)
     if request.method == 'POST':
         col_model = request.POST.get('col_model')
-        if 'run_model' in request.POST:
-            if str(dataframe[col_model].dtype) != 'bool':
-                _, df_compare = md.regressor_models(target_col=col_model)
-                best_model = df_compare['Model'][0]
-                best_result = df_compare['MAE'][0]
-            else:
-                _, df_compare = md.classify_models(target_col=col_model)
-                best_model = df_compare['Model'][0]
-                best_result = df_compare['Accuracy'][0]
-            # save to database
-            global curr_id
-            if curr_id is not None:
-                user_file = get_object_or_404(models.UserFile, id=curr_id)
 
-                user_file.best_model = best_model
-                user_file.best_result = best_result
-                user_file.save()
-            else:
-                latest_user_file = models.UserFile.objects.order_by('-id').first()
-                user_file = get_object_or_404(models.UserFile, id=latest_user_file.id)
+        # Choose features
+        form_choose_features = ChooseFeatureForm(request.POST)
+        if form_choose_features.is_valid():
+            drop_columns = [form_choose_features.fields[f'checkbox_{i}'].label for i in range(len(columns)) if
+                             form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
 
-                user_file.best_model = best_model
-                user_file.best_result = best_result
-                user_file.save()
+        # Run model
+        if str(dataframe[col_model].dtype) != 'bool':
+            _, df_compare = md.regressor_models(target_col=col_model, drop_features=drop_columns)
+            best_model = df_compare['Model'][0]
+            best_result = df_compare['MAE'][0]
+        else:
+            _, df_compare = md.classify_models(target_col=col_model, drop_features=drop_columns)
+            best_model = df_compare['Model'][0]
+            best_result = df_compare['Accuracy'][0]
+        # save to database
+        global curr_id
+        if curr_id is not None:
+            user_file = get_object_or_404(models.UserFile, id=curr_id)
 
-            loading = False
+            user_file.best_model = best_model
+            user_file.best_result = best_result
+            user_file.save()
+        else:
+            latest_user_file = models.UserFile.objects.order_by('-id').first()
+            user_file = get_object_or_404(models.UserFile, id=latest_user_file.id)
 
-            cols_compare, data_compare = AutoMLView.deploy_dataframe(df_compare)
-            context = {'columns': columns,
-                       'cols_compare': cols_compare,
-                       'data_compare': data_compare,
-                       'loading': loading}
-            return render(request, 'accounts/model.html', context)
+            user_file.best_model = best_model
+            user_file.best_result = best_result
+            user_file.save()
+
+        loading = False
+
+        cols_compare, data_compare = AutoMLView.deploy_dataframe(df_compare)
+        context = {'columns': columns,
+                   'col_picked': col_model,
+                   'choose_features': dataframe.drop(drop_columns + [col_model], axis=1).columns,
+                   'cols_compare': cols_compare,
+                   'data_compare': data_compare,
+                   'form': form_choose_features,
+                   'loading': loading}
+        return render(request, 'accounts/model.html', context)
+
+    else:
+        form_choose_features = ChooseFeatureForm()
 
     context = {'columns': columns,
                'col_model': col_model,
-               'loading': loading}
+               'loading': loading,
+               'form': form_choose_features}
     return render(request, 'accounts/model.html', context)

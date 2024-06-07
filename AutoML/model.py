@@ -12,9 +12,10 @@ class Model:
     def __init__(self, dataframe:DataFrame):
         self._df = dataframe
 
-    def classify_models(self, target_col, save_model=False, save_path=any):
+    def classify_models(self, target_col, drop_features=[], save_model=False, save_path=any):
         """Compare all classifier models in pycaret, take model give best result"""
-        classification.setup(data=self._df, target=target_col,
+        classification.setup(data=self._df.drop(columns=drop_features),
+                             target=target_col,
                              remove_outliers=True,
                             imputation_type='simple',
                             numeric_imputation='mean',
@@ -29,14 +30,15 @@ class Model:
 
         return df_preprocess_info, df_compare
 
-    def regressor_models(self, target_col, save_model=False, save_path=any):
+    def regressor_models(self, target_col, drop_features=[], save_model=False, save_path=any):
         """Compare all classifier models in pycaret, take model give best result"""
-        regression.setup(data=self._df, target=target_col,
-                             remove_outliers=True,
-                            imputation_type='simple',
-                            numeric_imputation='mean',
-                            categorical_imputation='mode',
-                            use_gpu=False)
+        regression.setup(data=self._df.drop(columns=drop_features),
+                        target=target_col,
+                        remove_outliers=True,
+                        imputation_type='simple',
+                        numeric_imputation='mean',
+                        categorical_imputation='mode',
+                        use_gpu=False)
         df_preprocess_info = regression.pull()
         best_model = regression.compare_models()
         df_compare = regression.pull()
