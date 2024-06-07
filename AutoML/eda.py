@@ -168,8 +168,8 @@ class EDA:
     def check_constant_unique(self) -> dict:
         """Return dictionary contain columns have constant or unique value."""
         cons_uni = {
-            'Constant':[],
-            'Unique Values':[]
+            'Constant': [],
+            'Unique Values': []
         }
         for col in self._df.columns:
             if self._df[col].nunique() == 1:

@@ -46,10 +46,11 @@
         <div class="w-25 bg-dark text-white d-flex flex-column vh-100 pt-3 gap-3">
             {% include 'accounts/navbar.html' %}            
         </div>
-    
         <div class="w-75 d-flex flex-column align-items-center vh-100 gap-2 p-2 overflow-auto">
             {% block content %}
-            
+            <div>
+                <h2>Chào mừng đến với AutoML, nhấn "Tải dữ liệu" để bắt đầu!</h2>
+            </div>
             {% endblock %}
             
         </div>
