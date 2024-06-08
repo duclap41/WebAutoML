@@ -7,12 +7,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 class EDA:
     """Exploratory Data Analysis"""
+
     def __init__(self, dataframe: DataFrame, name="Data Frame"):
         self._df = dataframe
         self._name = name
-
 
     @classmethod
     def drop_obj_bool_cols(cls, dataframe: DataFrame):
@@ -69,12 +70,12 @@ class EDA:
         return corr_summary, plt
 
     # make clear data
-    def checkOutliers(self, algo="IQR",
-                      coef=1.5,
-                      size=None,
-                      drop=[],
-                      rotate=0,
-                      title="Box Plot of Feature Columns") -> tuple[Any, DataFrame, plt]:
+    def check_outliers(self, algo="IQR",
+                       coef=1.5,
+                       size=None,
+                       drop=None,
+                       rotate=0,
+                       title="Box Plot of Feature Columns") -> tuple[Any, DataFrame, plt]:
         """
         Check outliers in every feature, return columns have outliers, ignoring column has data type is object or bool
         Algo is the algorithm will use to compute outliers
@@ -84,9 +85,11 @@ class EDA:
         Rotate is the angle of label rotation
         Title is title of boxplot
         """
-        # drop all columns can't check outliers
+        # drop all columns which can't check outliers
+        if drop is None:
+            drop = []
         rmCols = [col for col in self._df.columns
-                 if (str(self._df[col].dtype) in ('object', 'bool'))]
+                  if (str(self._df[col].dtype) in ('object', 'bool'))]
         chk_outliers = self._df.drop(columns=rmCols)
         df_outliers = pd.DataFrame({
             'Columns': [],
@@ -114,18 +117,19 @@ class EDA:
             plt.figure(figsize=size)
         sns.boxplot(data=chk_outliers.drop(columns=drop))
         plt.xticks(rotation=rotate)
-        plt.title(title+"\n The dots are outliers")
+        plt.title(title + "\n The dots are outliers")
 
         return int(df_outliers["Outliers"].sum()), df_outliers, plt
-    def checkMissing(self) -> tuple[int, DataFrame]:
+
+    def check_miss_value(self) -> tuple[int, DataFrame]:
         """Check missing value in every feature, return total missing values and columns have missing values\n
         num_row is number of rows, want to see in missing values Dataframe
         """
         total_missvalues = self._df.isnull().sum().sum()
 
         df_missval = pd.DataFrame({
-            'Columns':[],
-            'Missing Values':[]
+            'Columns': [],
+            'Missing Values': []
         })
         for col in self._df.columns:
             df_missval = pd.concat([df_missval, pd.DataFrame({
@@ -135,11 +139,11 @@ class EDA:
 
         return int(total_missvalues), df_missval
 
-    def checkDuplicate(self):
+    def check_duplicate(self):
         """Return total duplicated rows in Dataframe, and rows are duplicated"""
         return self._df.duplicated().sum()
 
-    def checkImbalance(self):
+    def check_imbalance(self):
         def is_imbalance(dataframe, col_name, threshold=0.9) -> bool:
             """Check columns is imbalance or not.\n
             Threshold: Ratio threshold between the most common class
@@ -152,8 +156,8 @@ class EDA:
             return False
 
         df_imblances = pd.DataFrame({
-            'Columns':[],
-            'Imbalance':[]
+            'Columns': [],
+            'Imbalance': []
         })
         for col in self._df.columns:
             df_imblances = pd.concat([df_imblances, pd.DataFrame({

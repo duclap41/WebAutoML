@@ -19,8 +19,9 @@ import pandas as pd
 from AutoML import *
 import urllib, base64
 
+
 class AutoMLView:
-    def __init__(self):...
+    def __init__(self): ...
 
     @classmethod
     def deploy_plot(cls, plot):
@@ -44,13 +45,16 @@ class AutoMLView:
             data.append(row.tolist())
         return columns, data
 
+
 @login_required(login_url='signin')
 def home(request):
     return render(request, 'accounts/homepage.html')
 
+
 @login_required(login_url='signin')
 def contact(request):
     return HttpResponse('Contact Page')
+
 
 def signin(request):
     if request.user.is_authenticated:
@@ -71,13 +75,14 @@ def signin(request):
                 messages.info(request, 'Username hoặc mật khẩu không đúng')
                 # return render(request, 'accounts/signin.html', context)
 
-
     context = {}
     return render(request, 'accounts/signin.html', context)
+
 
 def logoutUser(request):
     logout(request)
     return redirect('signin')
+
 
 def signup(request):
     if request.user.is_authenticated:
@@ -92,8 +97,9 @@ def signup(request):
                 user = form.cleaned_data.get('username')
                 messages.success(request, 'Tài khoản ' + user + ' đã được tạo thành công')
 
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'accounts/signup.html', context)
+
 
 @login_required(login_url='signin')
 def editprofile(request):
@@ -104,10 +110,11 @@ def editprofile(request):
             user = form.cleaned_data.get('username')
             messages.success(request, 'Tài khoản ' + user + ' đã được cập nhật thành công')
     else:
-        form = ChangeUserForm(instance=request.user) 
+        form = ChangeUserForm(instance=request.user)
 
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'accounts/editprofile.html', context)
+
 
 @login_required(login_url='signin')
 def changepassword(request):
@@ -118,13 +125,16 @@ def changepassword(request):
             update_session_auth_hash(request, form.user)
             messages.success(request, 'Tài khoản đã cập nhật mật khẩu thành công')
     else:
-        form = PasswordChangeForm(user=request.user) 
+        form = PasswordChangeForm(user=request.user)
 
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'accounts/changepassword.html', context)
+
 
 dataframe = pd.DataFrame()
 curr_id = None
+
+
 @login_required
 def upload(request):
     global dataframe
@@ -143,7 +153,7 @@ def upload(request):
                    'columns': columns}
         return render(request, 'accounts/upload.html', context)
     else:
-       # upload file
+        # upload file
         if request.method == 'POST':
             form = UploadUserFileForm(request.POST, request.FILES)
             if form.is_valid():
@@ -167,24 +177,26 @@ def upload(request):
         context = {'form': form}
         return render(request, 'accounts/upload.html', context)
 
+
 @login_required(login_url='signin')
 def profile(request):
     context = {}
     return render(request, 'accounts/profile.html', context)
 
+
 @login_required(login_url='signin')
 def overview(request):
     global dataframe
-    #overview
+    # overview
     eda = EDA(dataframe)
     number_features = len(eda.columns)
     number_samples = eda.entries
-    number_outliers, _, _ = eda.checkOutliers()
-    number_missval, _ = eda.checkMissing()
-    number_duplicate = eda.checkDuplicate()
-    number_imbalance, _ = eda.checkImbalance()
+    number_outliers, _, _ = eda.check_outliers()
+    number_missval, _ = eda.check_miss_value()
+    number_duplicate = eda.check_duplicate()
+    number_imbalance, _ = eda.check_imbalance()
 
-    #columns dtype
+    # columns dtype
     df_cols_dtype = eda.examine()
     columns, data = AutoMLView.deploy_dataframe(df_cols_dtype)
 
@@ -198,6 +210,7 @@ def overview(request):
                'data': data}
     return render(request, 'accounts/overview.html', context)
 
+
 @login_required(login_url='signin')
 def alert(request):
     global dataframe
@@ -209,15 +222,15 @@ def alert(request):
     data_uniq = dict_const_uniq['Unique Values']
 
     # Missing values
-    _, df_missval = eda.checkMissing()
+    _, df_missval = eda.check_miss_value()
     cols_missval, data_missval = AutoMLView.deploy_dataframe(df_missval)
 
     # Imbalance columns
-    _, df_imbal = eda.checkImbalance()
+    _, df_imbal = eda.check_imbalance()
     cols_imbal, data_imbal = AutoMLView.deploy_dataframe(df_imbal)
 
     # Outliers
-    _, df_out, plot_out = eda.checkOutliers(size=(10,6), rotate=30, title="Box Plot Outliers")
+    _, df_out, plot_out = eda.check_outliers(size=(10, 6), rotate=30, title="Box Plot Outliers")
     cols_out, data_out = AutoMLView.deploy_dataframe(df_out)
     gfx_out = AutoMLView.deploy_plot(plot_out)
 
@@ -231,6 +244,7 @@ def alert(request):
                'data_out': data_out,
                'gfx_out': gfx_out}
     return render(request, 'accounts/alert.html', context)
+
 
 @login_required(login_url='signin')
 def features(request):
@@ -273,16 +287,19 @@ def features(request):
                }
     return render(request, 'accounts/features.html', context)
 
+
 @login_required(login_url='signin')
 def suggestion(request):
     context = {}
     return render(request, 'accounts/suggestion.html', context)
+
 
 @login_required(login_url='signin')
 def history(request):
     user_files = models.UserFile.objects.all()
     context = {'files': user_files}
     return render(request, 'accounts/history.html', context)
+
 
 @login_required(login_url='signin')
 def model(request):
@@ -303,7 +320,6 @@ def model(request):
     cols_compare = []
     data_compare = []
 
-
     ChooseFeatureForm = create_choose_features_form(columns)
     if request.method == 'POST':
         col_model = request.POST.get('col_model')
@@ -312,7 +328,7 @@ def model(request):
         form_choose_features = ChooseFeatureForm(request.POST)
         if form_choose_features.is_valid():
             drop_columns = [form_choose_features.fields[f'checkbox_{i}'].label for i in range(len(columns)) if
-                             form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
+                            form_choose_features.cleaned_data[f'checkbox_{i}'] is False]
             choose_features = dataframe.drop(drop_columns + [col_model], axis=1).columns.tolist()
 
         # Run model
