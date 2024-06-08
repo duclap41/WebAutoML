@@ -296,7 +296,7 @@ def model(request):
     global dataframe
     md = Model(dataframe)
     columns = dataframe.columns
-    col_model = columns[1]
+    col_model = []
     loading = True
     drop_columns = []
     choose_features = []
