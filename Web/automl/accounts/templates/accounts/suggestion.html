@@ -3,8 +3,21 @@
 {% block content %}
 
 {% include 'accounts/profile_tab.html' %}
+<div style="text-align: left;">
+    {% if suggestion.0 %}
+        {% for sg in suggestion %}
+            <h3>{{ sg.0 }}</h3>
+            <ul>
+                {% for topic in sg|slice:"1:" %}
+                    <li>{{ topic }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <h2>Không có gợi ý!!!</h2>
+    {% endif %}
+</div>
 
-<p>Chưa phát triển!</p>
 
 <a href="/model" class="btn btn-primary">Tiếp theo</a>
 

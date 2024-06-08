@@ -290,7 +290,23 @@ def features(request):
 
 @login_required(login_url='signin')
 def suggestion(request):
-    context = {}
+    global dataframe
+    sg_process = SuggestPreprocess(dataframe)
+
+    sg_constant_unique = sg_process.sg_constant_unique()
+    sg_miss_value = sg_process.sg_miss_value()
+    sg_imbalance = sg_process.sg_imbalance()
+    sg_outlier = sg_process.sg_outlier()
+    sg_correlate = sg_process.sg_correlate()
+
+    list_suggestion = [sg_constant_unique, sg_miss_value, sg_imbalance, sg_outlier, sg_correlate]
+
+    # Drop empty suggestion
+    for sg in list_suggestion:
+        if len(sg) == 1:
+            list_suggestion.remove(sg)
+
+    context = {'suggestion': list_suggestion}
     return render(request, 'accounts/suggestion.html', context)
 
 
