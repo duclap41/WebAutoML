@@ -274,9 +274,9 @@ def features(request):
     return render(request, 'accounts/features.html', context)
 
 @login_required(login_url='signin')
-def reproduction(request):
+def suggestion(request):
     context = {}
-    return render(request, 'accounts/reproduction.html', context)
+    return render(request, 'accounts/suggestion.html', context)
 
 @login_required(login_url='signin')
 def history(request):
