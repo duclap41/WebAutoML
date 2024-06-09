@@ -288,7 +288,7 @@ def features(request):
     gfx_inter = AutoMLView.deploy_plot(plot_inter)
 
     # Feature Correlation
-    _, plot_corr = eda.correlation(rotate=30)
+    _, plot_corr = eda.correlation(visual=True, rotate=30)
     gfx_corr = AutoMLView.deploy_plot(plot_corr)
 
     context = {'columns': columns,

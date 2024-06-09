@@ -43,6 +43,7 @@ class EDA:
 
     def correlation(self, targets=[],
                     drops=[],
+                    visual=False,
                     rotate=0,
                     size=None,
                     title='Correlation Matrix of Features'):
@@ -61,6 +62,8 @@ class EDA:
         corr_summary = corr_matrix[targets].sort_values(by=targets[0], ascending=False)
 
         # Visualize using heat map
+        if visual is False:
+            return corr_summary, None
         if size is not None:
             plt.figure(figsize=size)
         sns.heatmap(corr_matrix[targets], annot=True, cmap='coolwarm', fmt='.2f', linewidths=.5)

@@ -56,13 +56,13 @@ class SuggestPreprocess:
         suggestion = ["Xử lý hai đặc trưng có độ tương quan cao (từ 0.6 đến 1 hoặc -0.6 đến -1):"]
         is_corr = False
         try:
-            corr_summary = self._eda.correlation()
-            for _, row in corr_summary[0].iterrows():
+            corr_summary, _ = self._eda.correlation()
+            for _, row in corr_summary.iterrows():
                 for _, corr_value in row.items():
                     if 0.6 <= corr_value <= 1 or -1 <= corr_value <= -0.6:
                         is_corr = True
                         break
-        except IndexError:
+        except IndexError or RuntimeError:
             pass
 
         if is_corr:

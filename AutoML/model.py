@@ -68,10 +68,3 @@ class Model:
             regression.save_model(best_model, os.path.join(save_path, 'best_model'))
 
         return df_preprocess_info, df_compare
-
-
-if __name__ == '__main__':
-    df = pd.read_csv('../Data/titanic.csv')
-    md = Model(df)
-    #_, df = md.classify_models(target_col='Transported')
-    print(md.check_type('Transported'))
