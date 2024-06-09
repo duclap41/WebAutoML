@@ -85,12 +85,10 @@ def signin(request):
 
             if user is not None:
                 login(request, user)
-                # return redirect('home')
-                return redirect('upload')
+                return redirect('home')
 
             else:
                 messages.info(request, 'Username hoặc mật khẩu không đúng')
-                # return render(request, 'accounts/signin.html', context)
 
     context = {}
     return render(request, 'accounts/signin.html', context)

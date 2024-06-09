@@ -1,4 +1,4 @@
-    {% load static %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>Trang chủ</title>
@@ -42,20 +42,37 @@
 </head>
 
 <body>
-    <div class="d-flex w-100 h-100 m-0 p-0">
-        <div class="w-25 bg-dark text-white d-flex flex-column vh-100 pt-3 gap-3">
-            {% include 'accounts/navbar.html' %}            
+<div class="d-flex w-100 h-100 m-0 p-0">
+    <div class="w-25 bg-dark text-white d-flex flex-column vh-100 pt-3 gap-3">
+        {% include 'accounts/navbar.html' %}
+    </div>
+    <div class="w-75 d-flex flex-column align-items-center vh-100 gap-2 p-2 overflow-auto">
+        {% block content %}
+        <div style="">
+            <h1>Chào mừng đến với <br>Website Automated Machine Learning!</h1>
+            <p>Chúng tôi cung cấp cho bạn các công cụ để tự động: Khai phá dữ liệu, gợi ý tiền xử lý, chạy và so sánh
+                các mô hình.
+                <br>
+                Từ đó các bạn sẽ hiểu hơn về bộ dữ liệu, có thể tự tạo ra một base-line riêng.<br>
+                Hiện tại Website hỗ trợ 3 loại định dạng file dataset: csv, excel, json.</p>
+            <h3>Các bước thực hiện:</h3>
+            <ol>
+                <li>Tải file dữ liệu: chọn file dataset mình muốn chạy tại đây</li>
+                <li>Chạy Khai phá dữ liệu:</li>
+                <ul style="list-style-type: Disc">
+                    <li>Phần tổng quan: Hiển thị thông tin tổng quát của dataset</li>
+                    <li>Phần Cảnh báo: Hiển thị những phần lỗi mà dataset đang mắc phải</li>
+                    <li>Phần Đặc trưng: Hiển thị sự tương quan cũng như tương tác giữa các đặc trưng</li>
+                    <li>Phần Gợi ý: Gợi ý cách để tiền xử lý bộ dữ liệu hiện tại</li>
+                </ul>
+                <li>Mô hình hóa : Chọn target và features để huấn luyện, sau đó hiển thị những mô hình tốt nhất</li>
+                </ol>
         </div>
-        <div class="w-75 d-flex flex-column align-items-center vh-100 gap-2 p-2 overflow-auto">
-            {% block content %}
-            <div>
-                <h2>Chào mừng đến với AutoML, nhấn "Tải dữ liệu" để bắt đầu!</h2>
-            </div>
-            {% endblock %}
-            
-        </div>
-    </div>  
+        {% endblock %}
+
+    </div>
+</div>
 
 </body>
 
-</html>
+</html
