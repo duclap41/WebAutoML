@@ -15,12 +15,6 @@ class EDA:
         self._df = dataframe
         self._name = name
 
-    @classmethod
-    def drop_obj_bool_cols(cls, dataframe: DataFrame):
-        # drop all columns can't check outliers
-        rm_cols = [col for col in dataframe.columns if (str(dataframe[col].dtype) in ('object', 'bool'))]
-        return dataframe.drop(columns=rm_cols)
-
     # identify data
     @property
     def columns(self) -> list:
@@ -53,8 +47,11 @@ class EDA:
         Rotate is the angle of label rotation
         size is figure size\n
         title is title of plot"""
+        def drop_obj_bool_cols(dataframe: DataFrame):
+            rm_cols = [col for col in dataframe.columns if (str(dataframe[col].dtype) in ('object', 'bool'))]
+            return dataframe.drop(columns=rm_cols)
 
-        new_df = EDA.drop_obj_bool_cols(self._df)
+        new_df = drop_obj_bool_cols(self._df)
         new_df = new_df.drop(columns=drops)
         if len(targets) == 0:
             targets = new_df.columns
