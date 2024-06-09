@@ -12,6 +12,7 @@ class SuggestPreprocess:
         self._eda = EDA(self._df)
 
     def sg_constant_unique(self):
+        """Return suggestion script about constant columns or unique values"""
         suggestion = ["Xử lý giá trị trong cột là constant hoặc unique:"]
         dict_chck_cons_uni = self._eda.check_constant_unique()
 
@@ -23,6 +24,7 @@ class SuggestPreprocess:
         return suggestion
 
     def sg_miss_value(self):
+        """Return suggestion script about missing values"""
         suggestion = ["Xử lý missing value (tham khảo một trong các cách):"]
         is_miss_value = True if self._eda.check_miss_value()[0] else False
         if is_miss_value:
@@ -35,6 +37,7 @@ class SuggestPreprocess:
         return suggestion
 
     def sg_imbalance(self):
+        """Return suggestion script about imbalance columns"""
         suggestion = ["Xử lý các cột bị imbalance (tham khảo một trong các cách):"]
         is_imbalance = True if self._eda.check_imbalance()[0] else False
         if is_imbalance:
@@ -44,6 +47,7 @@ class SuggestPreprocess:
         return suggestion
 
     def sg_outlier(self):
+        """Return suggestion script about outliers"""
         suggestion = ["Xử lý outliers (tham khảo một trong các cách):"]
         is_outlier = True if self._eda.check_outliers()[0] else False
         if is_outlier:
@@ -53,6 +57,7 @@ class SuggestPreprocess:
         return suggestion
 
     def sg_correlate(self):
+        """Return suggestion script about correlation of features"""
         suggestion = ["Xử lý hai đặc trưng có độ tương quan cao (từ 0.6 đến 1 hoặc -0.6 đến -1):"]
         is_corr = False
         try:

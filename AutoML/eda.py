@@ -28,15 +28,15 @@ class EDA:
         return self._df.shape[0]
 
     def examine(self) -> DataFrame:
-        """Return dtype of all columns in Dataframe"""
+        """Return dtype of all columns in a Dataframe"""
         df_info = pd.DataFrame({
             'Column': [col for col in self._df.columns],
             'Dtype': [self._df[col].dtype for col in self._df.columns]
         })
         return df_info
 
-    def correlation(self, targets=[],
-                    drops=[],
+    def correlation(self, targets=None,
+                    drops=None,
                     visual=False,
                     rotate=0,
                     size=None,
@@ -47,6 +47,11 @@ class EDA:
         Rotate is the angle of label rotation
         size is figure size\n
         title is title of plot"""
+        if drops is None:
+            drops = []
+        if targets is None:
+            targets = []
+
         def drop_obj_bool_cols(dataframe: DataFrame):
             rm_cols = [col for col in dataframe.columns if (str(dataframe[col].dtype) in ('object', 'bool'))]
             return dataframe.drop(columns=rm_cols)

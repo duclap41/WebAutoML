@@ -14,6 +14,7 @@ class Model:
         self._df = dataframe
 
     def check_type(self, target_col):
+        """Return type of target columns: Categorical, Discrete or Continuous"""
         column = self._df[target_col]
         if str(column.dtype) in ['bool', 'object']:
             return "Categorical"
@@ -24,8 +25,12 @@ class Model:
             else:
                 return "Continuous"
 
-    def classify_models(self, target_col, drop_features=[], save_model=False, save_path=any):
-        """Compare all classifier models in pycaret, take model give best result"""
+    def classify_models(self, target_col, drop_features=None, save_model=False, save_path=any):
+        """Compare all classifier models in pycaret, take model give best result
+        target_col is target column
+        drop_features is list of column don't use for model"""
+        if drop_features is None:
+            drop_features = []
         data = self._df.drop(columns=drop_features)
         if data[target_col].isnull().any():
             if str(data[target_col].dtype) in ['bool', 'object']:
@@ -49,8 +54,12 @@ class Model:
 
         return df_preprocess_info, df_compare
 
-    def regressor_models(self, target_col, drop_features=[], save_model=False, save_path=any):
-        """Compare all classifier models in pycaret, take model give best result"""
+    def regressor_models(self, target_col, drop_features=None, save_model=False, save_path=any):
+        """Compare all classifier models in pycaret, take model give best result
+        target_col is target column
+        drop_features is list of column don't use for model"""
+        if drop_features is None:
+            drop_features = []
         data = self._df.drop(columns=drop_features)
         data[target_col] = data[target_col].fillna(data[target_col].mean())
         regression.setup(data=data,
