@@ -2,6 +2,8 @@ import os
 import traceback
 
 from django.core.exceptions import SuspiciousOperation
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, FileResponse
 from django.views import generic
@@ -22,6 +24,21 @@ import urllib, base64
 
 class AutoMLView:
     def __init__(self): ...
+
+    @classmethod
+    # Read more format file: csv, excel, json
+    def read_file(cls, data_file):
+        df = pd.DataFrame()
+        file_path = default_storage.path(data_file.name)
+        file_extension = os.path.splitext(file_path)[1]
+        if file_extension.lower() == '.csv':
+            df = pd.read_csv(file_path)
+        elif file_extension.lower() in ['.xls', '.xlsx']:
+            df = pd.read_excel(file_path)
+        elif file_extension.lower() == '.json':
+            df = pd.read_json(file_path)
+
+        return df
 
     @classmethod
     def deploy_plot(cls, plot):
@@ -144,9 +161,9 @@ def upload(request):
         global curr_id
         curr_id = file_id
         user_file = models.UserFile.objects.get(pk=file_id)
-        df = pd.read_csv(user_file.data_file)
-        dataframe = df
-        columns, data = AutoMLView.deploy_dataframe(df)
+
+        dataframe = AutoMLView.read_file(user_file.data_file)
+        columns, data = AutoMLView.deploy_dataframe(dataframe)
 
         context = {'form': form,
                    'data': data,
@@ -163,9 +180,8 @@ def upload(request):
                 messages.info(request, 'Upload File thành công')
 
                 # load new dataset
-                df = pd.read_csv(user_file.data_file)
-                dataframe = df
-                columns, data = AutoMLView.deploy_dataframe(df)
+                dataframe = AutoMLView.read_file(user_file.data_file)
+                columns, data = AutoMLView.deploy_dataframe(dataframe)
 
                 context = {'form': form,
                            'data': data,
