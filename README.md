@@ -1,5 +1,5 @@
 <!-- Title -->
-<h1 align="center"><b>Dental Service</b></h1>
+<h1 align="center"><b>WEBSITE AUTOMATED MACHINE LEARNING</b></h1>
 <p>This is a website that helps automate basic processes of machine learning (such as EDA, Feature Engineering, Modeling, etc.) with simple text or numeric datasets.
 That helps find baseline of the machine learning task.
 </p>
