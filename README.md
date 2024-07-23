@@ -6,6 +6,8 @@ pip install -r requirements.txt
 2. Connect to mySQL server:
 ````bash
 py manage.py makemigration accounts
+````
+````bash
 py manage.py migrate
 ````
 3. Run:
